@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @var $categories - array() - Список категорий
+ * @var $goods - array() - Список лотов
+ * @var $is_auth - boolean - Признак авторизации
+ * @var $user_name - string - Имя пользователя
+ * @var $title - string - Заголовок страницы
+ * @var $content - string - Содержательная часть страницы
+ */
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
