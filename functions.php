@@ -10,3 +10,15 @@ function formatPrice(float|int $price): string
     $price = number_format($price, 0, '', ' ') . ' ₽';
     return $price  . ' ₽';
 }
+
+function get_dt_range($date_string): array
+{
+    try {
+        $difference = date_diff(new DateTime('now'), new DateTime($date_string), true);
+        $hours = $difference->h + ($difference->d * 24);
+        return [$hours, $difference->i];
+    } catch (Exception $e) {
+        //
+    }
+    return [0,0];
+}
