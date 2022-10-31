@@ -31,7 +31,7 @@
                 <input type="search" name="search" placeholder="Поиск лота">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <a class="main-header__add-lot button" href="pages/add-lot.html">Добавить лот</a>
+            <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
 
             <nav class="user-menu">
 
@@ -67,7 +67,7 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="pages/all-lots.html"><?= $category['name_category'] ?></a>
+                    <a href="index.php"><?= $category['name_category'] ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
