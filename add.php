@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: index.php');
     }
 }
-$page_content = include_template('add-lot.php', ['categories' => $categories]);
+$page_content = include_template('add-lot.php', ['categories' => $categories, 'lot' => $lot, 'errors' => $errors]);
 $layout_content = include_template('layout.php', ['is_auth' => $is_auth, 'user_name' => $user_name, 'content' => $page_content,
     'title' => 'Новый лот', 'categories' => $categories]);
 
