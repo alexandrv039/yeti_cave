@@ -21,8 +21,9 @@ $lot = [
     'img' => '',
     'start_price' => '',
     'date_finish' => '',
-    'category' => '',
-    'step' => 0
+    'step' => 0,
+    'user_id' => 1,
+    'category' => ''
 ];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot['title'] = !empty($_POST['lot-name']) ? $_POST['lot-name'] : '';
@@ -30,12 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['title'] = 'Необходимо заполнить наименование';
     }
     $category = !empty($_POST['category']) ? $_POST['category'] : '';
+    $category_id = 0;
     $categoryExist = false;
     for ($i = 0; $i < count($categories); $i++){
         $cat = $categories[$i];
         if ($cat['name_category'] == $category) {
             $categoryExist = true;
             $lot['category'] = $cat['name_category'];
+            $category_id = $cat['id'];
             break;
         }
     }
@@ -48,13 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['lot_description'] = 'Необходимо заполнить описание лота';
     }
 
-    if (isset($_FILES['lot-img'])) {
+    if (isset($_FILES['lot-img']) && !empty($_FILES['lot-img']['name'])) {
         if (mime_content_type($_FILES['lot-img']['tmp_name']) == 'image/png' ||
             mime_content_type($_FILES['lot-img']['tmp_name']) == 'image/jpeg') {
             $fileName = $_FILES['lot-img']['name'];
             $filePath = __DIR__ . '/uploads/' . $fileName;
             move_uploaded_file($_FILES['lot-img']['tmp_name'], $filePath);
-            $lot['img'] = $filePath;
+            $lot['img'] = 'uploads/' . $fileName;
         } else {
             $errors['img'] = 'Можно добавлять только файлы формата png или jpeg';
         }
@@ -70,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_POST['lot-date']) && !empty($_POST['lot-rate'])) {
         if (is_date_valid($_POST['lot-date'])) {
-            $lot['date_finish'] = $_POST['lot-rate'];
+            $lot['date_finish'] = $_POST['lot-date'];
         } else {
             $errors['date_finish'] = 'Необходимо указать дату в правильном формате';
         }
@@ -85,6 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (count($errors) == 0) {
+        $lot['category'] = (int)$category_id;
+        saveLot($con, $lot);
         header('Location: index.php');
     }
 }

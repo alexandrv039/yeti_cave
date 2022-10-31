@@ -6,7 +6,7 @@ function getCategories($con)
     if (!$con) {
         $error = mysqli_connect_error();
     } else {
-        $sql = "SELECT character_code, name_category FROM yeti_cave.categories";
+        $sql = "SELECT id, character_code, name_category FROM yeti_cave.categories";
         $result = mysqli_query($con, $sql);
         if ($result) {
             $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -27,6 +27,52 @@ function getLot($con, $id)
         }
     }
     return null;
+}
+
+function saveLot($con, $lot)
+{
+        $sql = "INSERT INTO yeti_cave.lots (title, lot_description, img, start_price, date_finish, step, user_id, category_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($con, $sql);
+
+        if ($stmt === false) {
+            $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($con);
+            die($errorMsg);
+        }
+
+        if ($lot) {
+            $types = '';
+            $stmt_data = [];
+
+            foreach ($lot as $value) {
+                $type = 's';
+
+                if (is_int($value)) {
+                    $type = 'i';
+                }
+                else if (is_string($value)) {
+                    $type = 's';
+                }
+                else if (is_double($value)) {
+                    $type = 'd';
+                }
+
+                if ($type) {
+                    $types .= $type;
+                    $stmt_data[] = $value;
+                }
+            }
+
+            $values = array_merge([$stmt, $types], $stmt_data);
+            mysqli_stmt_bind_param(...$values);
+
+            if (mysqli_errno($con) > 0) {
+                $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($con);
+                die($errorMsg);
+            }
+        }
+
+        return $stmt->execute();
 }
 
 function getGoods($con)

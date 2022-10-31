@@ -12,9 +12,9 @@
         <div class="form__item <?= array_key_exists('title', $errors) ? 'form__item--invalid' : '' ?>"> <!-- form__item--invalid -->
             <label for="lot-name">Наименование <sup>*</sup></label>
             <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота">
-            <span class="form__error">Введите наименование лота</span>
+            <span class="form__error"><?=  $errors['title'] ?></span>
         </div>
-        <div class="form__item">
+        <div class="form__item <?= (array_key_exists('category', $errors) ? 'form__item--invalid' : '') ?>">
             <label for="category">Категория <sup>*</sup></label>
             <select id="category" name="category">
             <option>Выберите категорию</option>
@@ -22,15 +22,15 @@
                 <option><?= $category['name_category'] ?></option>
                 <?php endforeach; ?>
             </select>
-            <span class="form__error <?= array_key_exists('category', $errors) ? 'form__item--invalid' : '' ?>">Выберите категорию</span>
+            <span class="form__error"><?=  $errors['category'] ?></span>
         </div>
     </div>
-    <div class="form__item form__item--wide">
+    <div class="form__item form__item--wide <?= (array_key_exists('lot_description', $errors) ? 'form__item--invalid' : '') ?>">
         <label for="message">Описание <sup>*</sup></label>
         <textarea id="message" name="message" placeholder="Напишите описание лота"></textarea>
-        <span class="form__error">Напишите описание лота</span>
+        <span class="form__error"><?=  $errors['lot_description'] ?></span>
     </div>
-    <div class="form__item form__item--file">
+    <div class="form__item form__item--file <?= (array_key_exists('img', $errors) ? 'form__item--invalid' : '') ?>">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
             <input class="visually-hidden" type="file" id="lot-img" name="lot-img" value="">
@@ -40,20 +40,20 @@
         </div>
     </div>
     <div class="form__container-three">
-        <div class="form__item form__item--small">
+        <div class="form__item form__item--small <?= (array_key_exists('start_price', $errors) ? 'form__item--invalid' : '') ?>">
             <label for="lot-rate">Начальная цена <sup>*</sup></label>
             <input id="lot-rate" type="text" name="lot-rate" placeholder="0">
-            <span class="form__error">Введите начальную цену</span>
+            <span class="form__error"><?=  $errors['start_price'] ?></span>
         </div>
-        <div class="form__item form__item--small">
+        <div class="form__item form__item--small <?= (array_key_exists('step', $errors) ? 'form__item--invalid' : '') ?>">
             <label for="lot-step">Шаг ставки <sup>*</sup></label>
             <input id="lot-step" type="text" name="lot-step" placeholder="0">
-            <span class="form__error">Введите шаг ставки</span>
+            <span class="form__error"><?=  $errors['step'] ?></span>
         </div>
-        <div class="form__item">
+        <div class="form__item <?= (array_key_exists('date_finish', $errors) ? 'form__item--invalid' : '') ?>">
             <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
             <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
-            <span class="form__error">Введите дату завершения торгов</span>
+            <span class="form__error"><?=  $errors['date_finish'] ?></span>
         </div>
     </div>
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
