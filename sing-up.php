@@ -22,6 +22,41 @@ $userData = [
 $errors = [];
 $categories = getCategories($con);
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (empty($_POST['email'])) {
+        $errors['email'] = 'Необходимо указать адрес электронной почты';
+    } else {
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            $errors['email'] = 'Необходимо указать корректный адрес электронной почты';
+        }
+        $userData['email'] = $email;
+    }
+
+    if (empty($_POST['password'])) {
+        $errors['password'] = 'Необходимо указать пароль';
+    } else {
+        $userData['password'] = $_POST['password'];
+    }
+
+    if (empty($_POST['name'])) {
+        $errors['name'] = 'Необходимо указать имя пользователя';
+    } else {
+        $userData['name'] = $_POST['name'];
+    }
+
+    if (empty($_POST['message'])) {
+        $errors['contacts'] = 'Не заполнены контактные данные';
+    } else {
+        $userData['contacts'] = $_POST['message'];
+    }
+
+    if (count($errors) == 0) {
+        header('Location: index.php');
+    }
+}
+
 $pageContent = include_template('sing-up-template.php', ['userData' => $userData, 'errors' => $errors]);
 $layoutContent = include_template('layout.php', ['content' => $pageContent, 'categories' => $categories,
             'title' => 'Регистрация на сайте']);

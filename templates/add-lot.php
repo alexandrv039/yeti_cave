@@ -11,7 +11,7 @@
     <div class="form__container-two">
         <div class="form__item <?= array_key_exists('title', $errors) ? 'form__item--invalid' : '' ?>"> <!-- form__item--invalid -->
             <label for="lot-name">Наименование <sup>*</sup></label>
-            <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота">
+            <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= $lot['title'] ?>">
             <span class="form__error"><?=  $errors['title'] ?></span>
         </div>
         <div class="form__item <?= (array_key_exists('category', $errors) ? 'form__item--invalid' : '') ?>">
