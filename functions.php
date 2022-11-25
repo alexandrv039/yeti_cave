@@ -6,9 +6,7 @@
  */
 function formatPrice(float|int $price): string
 {
-    ceil($price);
-    $price = number_format($price, 0, '', ' ') . ' ₽';
-    return $price  . ' ₽';
+    return number_format(ceil($price), 0, '', ' ') . ' ₽';
 }
 
 function get_dt_range($date_string): array

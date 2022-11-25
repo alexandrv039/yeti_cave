@@ -13,6 +13,7 @@ require_once 'models.php';
 require_once 'helpers.php';
 require_once 'functions.php';
 
+session_start();
 $categories = getCategories($con);
 $errors = [];
 $lot = [
@@ -22,7 +23,7 @@ $lot = [
     'start_price' => '',
     'date_finish' => '',
     'step' => 0,
-    'user_id' => 1,
+    'user_id' => $_SESSION['user_id'],
     'category' => ''
 ];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

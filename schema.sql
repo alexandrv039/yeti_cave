@@ -76,6 +76,8 @@ VALUES ('2022-09-09 12:11:12', 11199, 2, 1),
        ('2022-09-09 12:12:12', 11299, 3, 1),
        ('2022-09-09 12:13:12', 11399, 2, 1);
 
+CREATE FULLTEXT INDEX lots_search ON lots(title, lot_description);
+
 
 
 

@@ -24,7 +24,7 @@ $errors = [];
 $categories = getCategories($con);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+    $userDB = null;
     if (empty($_POST['email'])) {
         $errors['email'] = 'Необходимо указать адрес электронной почты';
     } else {
@@ -33,38 +33,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors['email'] = 'Необходимо указать корректный адрес электронной почты';
         } else {
             $userDB = getUserByEmail($con, $email);
-            if ($userDB <> null) {
-                $errors['email'] = 'Пользователь уже зарегистрирован';
+            if ($userDB == null) {
+                $errors['email'] = 'Пользователь не зарегистрирован';
             }
         }
         $userData['email'] = $email;
     }
 
     if (empty($_POST['password'])) {
-        $errors['password'] = 'Необходимо указать пароль';
+        $errors['password'] = 'Не указан пароль';
     } else {
         $userData['password'] = $_POST['password'];
     }
-
-    if (empty($_POST['name'])) {
-        $errors['name'] = 'Необходимо указать имя пользователя';
-    } else {
-        $userData['name'] = $_POST['name'];
+    if ($userDB <> null) {
+        if (!password_verify($_POST['password'], $userDB['user_password'])) {
+            $errors['password'] = 'Неверный пароль';
+        }
     }
 
-    if (empty($_POST['message'])) {
-        $errors['contacts'] = 'Не заполнены контактные данные';
-    } else {
-        $userData['contacts'] = $_POST['message'];
-    }
-
-    if (count($errors) == 0) {
-        saveUser($con, $userData);
-        header('Location: index.php');
-    }
 }
-
-$pageContent = include_template('sing-up-template.php', ['userData' => $userData, 'errors' => $errors]);
-$layoutContent = include_template('layout.php', ['content' => $pageContent, 'categories' => $categories,
-            'title' => 'Регистрация на сайте']);
-print $layoutContent;
+if (count($errors) == 0 && $_SERVER['REQUEST_METHOD'] == 'POST') {
+    $_SESSION['user_name'] = $userDB['user_name'];
+    $_SESSION['user_id'] = $userDB['id'];
+    header('Location: index.php');
+} else {
+    $pageContent = include_template('login-template.php', ['userData' => $userData, 'errors' => $errors]);
+    $layoutContent = include_template('layout.php', ['content' => $pageContent, 'categories' => $categories,
+        'title' => 'Регистрация на сайте']);
+    print $layoutContent;
+}

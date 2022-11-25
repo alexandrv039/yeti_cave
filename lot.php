@@ -11,6 +11,7 @@ require_once 'models.php';
 require_once 'helpers.php';
 require_once 'functions.php';
 
+session_start();
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 if ($id) {
     $lot = getLot($con, $id);
