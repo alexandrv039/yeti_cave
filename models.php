@@ -75,10 +75,11 @@ function saveLot($con, $lot)
         return $stmt->execute();
 }
 
-function getGoods($con)
+function getGoods($con, $category)
 {
     $goods = [];
-    $sql_goods = get_query_list_lots('2022-09-01');
+
+    $sql_goods = get_query_list_lots(date('Y-m-d'), $category);
     $result = mysqli_query($con, $sql_goods);
     if ($result) {
         $goods = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -136,18 +137,54 @@ function getUserByEmail($con, $email)
     $user = [];
     $sql = "SELECT *
             FROM yeti_cave.users
-            WHERE email = '$email'";
-    $result = mysqli_query($con, $sql);
-    if ($result) {
-        $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        if (count($users) == 0) {
-            return null;
-        }
-        $user = $users[0];
+            WHERE email = ?";
+
+    $stmt = mysqli_prepare($con, $sql);
+    prepareSqlParams($con, $stmt, [$email]);
+    if ($stmt && $stmt->execute()) {
+            $res = $stmt->get_result();
+            return $res->fetch_array(MYSQLI_ASSOC);
     } else {
-        $error = mysqli_error($con);
+        return null;
     }
-    return $user;
+}
+
+function prepareSqlParams($con, $stmt, $userData)
+{
+    if ($stmt === false) {
+        $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($con);
+        die($errorMsg);
+    }
+
+    if ($userData) {
+        $types = '';
+        $stmt_data = [];
+
+        foreach ($userData as $value) {
+            $type = 's';
+
+            if (is_int($value)) {
+                $type = 'i';
+            } else if (is_string($value)) {
+                $type = 's';
+            } else if (is_double($value)) {
+                $type = 'd';
+            }
+
+            if ($type) {
+                $types .= $type;
+                $stmt_data[] = $value;
+            }
+        }
+
+        $values = array_merge([$stmt, $types], $stmt_data);
+        mysqli_stmt_bind_param(...$values);
+
+        if (mysqli_errno($con) > 0) {
+            $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($con);
+            die($errorMsg);
+        }
+    }
 }
 
 function saveUser($con, $userData)
@@ -197,7 +234,7 @@ function saveUser($con, $userData)
     return $stmt->execute();
 }
 
-function get_query_list_lots($date_end)
+function get_query_list_lots($date_end, $category)
 {
     $sql = "SELECT lots.id              as id,
        title           as name,
@@ -207,7 +244,14 @@ function get_query_list_lots($date_end)
        date_finish     as timer
 FROM yeti_cave.lots as lots
          LEFT JOIN yeti_cave.categories as c ON lots.category_id = c.id
-WHERE lots.date_finish > $date_end ORDER BY date_create DESC";
+WHERE lots.date_finish > '$date_end'";
+
+    if (!empty($category)) {
+        $sql .= " and c.character_code = '$category'";
+    }
+
+    $sql .= " ORDER BY date_create DESC";
+
     return $sql;
 }
 

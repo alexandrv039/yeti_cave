@@ -13,7 +13,7 @@
     <ul class="promo__list">
         <?php foreach ($categories as $category): ?>
             <li class="promo__item promo__item--<?= $category['character_code'] ?>">
-                <a class="promo__link" href="index.php"><?= $category['name_category'] ?></a>
+                <a class="promo__link" href="index.php?category=<?= $category['character_code'] ?>"><?= $category['name_category'] ?></a>
             </li>
         <?php endforeach; ?>
     </ul>

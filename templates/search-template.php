@@ -35,7 +35,7 @@
         <?php if (count($lots) > 0) : ?>
         <h2>Результаты поиска по запросу «<span><?= $search ?></span>»</h2>
         <?php else: ?>
-        <h2>По запросу «<span><?= $search ?></span>» ничего не найдено</h2>
+        <h2>По запросу «<span><?= $search ?></span>» Ничего не найдено</h2>
         <?php endif; ?>
         <ul class="lots__list">
             <?php foreach ($lots as $lot): ?>

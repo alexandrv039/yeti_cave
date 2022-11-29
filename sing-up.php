@@ -23,6 +23,8 @@ $userData = [
 $errors = [];
 $categories = getCategories($con);
 
+$goods = getGoods($con);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($_POST['email'])) {
